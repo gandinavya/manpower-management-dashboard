@@ -25,5 +25,8 @@ let contracts = [
         durationDays: 60,
         attendanceRate: "15/15 Present",
         dailyTaskStatus: "Floor Patrolling & Parking Management Active"
-    }
+ }
 ];
+app.get('/api/contracts', (req, res) => {
+    res.status(200).json(contracts);
+});
