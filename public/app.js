@@ -29,3 +29,43 @@ document.addEventListener('DOMContentLoaded', () => {
             deploymentsList.innerHTML = '<p style="color:red;">Error loading active deployment logs.</p>';
         }
     }
+
+    // Handle new requirement form submission
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = {
+            clientName: document.getElementById('clientName').value,
+            facilityType: document.getElementById('facilityType').value,
+            serviceType: document.getElementById('serviceType').value,
+            staffCount: Number(document.getElementById('staffCount').value),
+            durationDays: Number(document.getElementById('durationDays').value)
+        };
+
+        try {
+            const response = await fetch('/api/contracts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                statusMsg.style.color = 'green';
+                statusMsg.textContent = 'Requirement submitted successfully! Staff allocated.';
+                form.reset();
+                fetchDeployments(); // Refresh deployment cards
+            } else {
+                statusMsg.style.color = 'red';
+                statusMsg.textContent = result.error || 'Failed to submit requirement.';
+            }
+        } catch (err) {
+            statusMsg.style.color = 'red';
+            statusMsg.textContent = 'Unable to connect to server.';
+        }
+    });
+
+
+    fetchDeployments();
+    });
