@@ -30,3 +30,29 @@ let contracts = [
 app.get('/api/contracts', (req, res) => {
     res.status(200).json(contracts);
 });
+app.post('/api/contracts', (req, res) => {
+    const { clientName, facilityType, serviceType, staffCount, durationDays } = req.body;
+
+    if (!clientName || !staffCount || !durationDays) {
+        return res.status(400).json({ error: "Missing required fields." });
+    }
+
+    const newContract = {
+        id: contracts.length + 1,
+        clientName,
+        facilityType,
+        serviceType,
+        staffCount,
+        durationDays,
+        attendanceRate: `${staffCount}/${staffCount} Present`,
+        dailyTaskStatus: "Initial Staff Deployed & Tasks Scheduled"
+    };
+
+    contracts.push(newContract);
+    res.status(201).json({ message: "Requirement processed successfully", contract: newContract });
+});
+
+
+app.listen(PORT, () => {
+    console.log(`Manpower Portal Server running on http://localhost:${PORT}`);
+});
