@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manpower Management Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <div class="logo">Mayfair Security &amp; Cleaning Solutions</div>
+    <p>Admin Dashboard</p>
+    <div class="userbar">
+        <span id="welcome"></span>
+        <button type="button" class="logout-btn" id="logoutBtn">Log out</button>
+    </div>
+</header>
+
+<div class="container">
+    <div class="stats">
+        <div class="stat">
+            <div class="num" id="statContracts">0</div>
+            <div>Active contracts</div>
+        </div>
+        <div class="stat">
+            <div class="num" id="statStaff">0</div>
+            <div>Staff deployed</div>
+        </div>
+        <div class="stat">
+            <div class="num" id="statPresent">0</div>
+            <div>Present today</div>
+        </div>
+    </div>
+
+    <section class="card">
+        <h2>All Contracts</h2>
+        <input type="text" id="searchBox" class="search-box"
+               placeholder="Search by client, facility or service">
+        <div id="adminMsg"></div>
+        <div id="contractsList">
+            <p>Loading contracts...</p>
+        </div>
+    </section>
+</div>
+
+<script src="auth.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
