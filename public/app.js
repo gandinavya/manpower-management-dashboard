@@ -1,36 +1,50 @@
 document.addEventListener('DOMContentLoaded', () => {
+    if (!requireRole('client')) return;
+
     const form = document.getElementById('requirementForm');
     const statusMsg = document.getElementById('statusMsg');
     const deploymentsList = document.getElementById('deploymentsList');
 
+    document.getElementById('welcome').textContent = 'Logged in as ' + getSession().name;
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('clientName').value = getSession().name;
 
-    
     async function fetchDeployments() {
         try {
-            const response = await fetch('/api/contracts');
+            const response = await authFetch('/api/contracts');
+            if (!response.ok) throw new Error('Server error');
             const contracts = await response.json();
 
             if (contracts.length === 0) {
-                deploymentsList.innerHTML = '<p>No active deployments found.</p>';
+                deploymentsList.innerHTML = '<p>No active deployments yet. Submit a requirement above.</p>';
                 return;
             }
 
-            deploymentsList.innerHTML = contracts.map(contract => `
+            deploymentsList.innerHTML = contracts.map(contract => {
+                const recent = contract.reports.slice(-3).reverse();
+                const reportsHtml = recent.length === 0
+                    ? '<p class="muted">No daily reports yet.</p>'
+                    : '<ul class="report-list">' + recent.map(r =>
+                        `<li><span class="report-date">${esc(r.date)}</span> ${esc(r.text)}</li>`
+                    ).join('') + '</ul>';
+
+                return `
                 <div class="deployment-card">
-                    <h3>${contract.clientName} (${contract.facilityType})</h3>
-                    <p><strong>Service:</strong> ${contract.serviceType}</p>
+                    <h3>${esc(contract.clientName)} (${esc(contract.facilityType)})</h3>
+                    <p><strong>Service:</strong> ${esc(contract.serviceType)}</p>
                     <p><strong>Staff Deployed:</strong> ${contract.staffCount} workers</p>
                     <p><strong>Duration:</strong> ${contract.durationDays} Days</p>
-                    <p><strong>Today's Attendance:</strong> ${contract.attendanceRate || '100%'}</p>
-                    <span class="task-badge">Daily Task: ${contract.dailyTaskStatus || 'In Progress'}</span>
-                </div>
-            `).join('');
+                    <p><strong>Today's Attendance:</strong> ${esc(contract.attendanceRate)}</p>
+                    <span class="task-badge">Daily Task: ${esc(contract.dailyTaskStatus)}</span>
+                    <h4>Recent daily reports</h4>
+                    ${reportsHtml}
+                </div>`;
+            }).join('');
         } catch (err) {
             deploymentsList.innerHTML = '<p style="color:red;">Error loading active deployment logs.</p>';
         }
     }
 
-    // Handle new requirement form submission
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -43,9 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const response = await fetch('/api/contracts', {
+            const response = await authFetch('/api/contracts', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
 
@@ -53,9 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 statusMsg.style.color = 'green';
-                statusMsg.textContent = 'Requirement submitted successfully! Staff allocated.';
+                statusMsg.textContent = 'Requirement submitted successfully!';
                 form.reset();
-                fetchDeployments(); // Refresh deployment cards
+                document.getElementById('clientName').value = getSession().name;
+                fetchDeployments();
             } else {
                 statusMsg.style.color = 'red';
                 statusMsg.textContent = result.error || 'Failed to submit requirement.';
@@ -66,6 +80,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
     fetchDeployments();
-    });
+});
