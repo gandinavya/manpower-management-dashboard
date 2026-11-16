@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up - Manpower Management Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <div class="logo">Mayfair Security &amp; Cleaning Solutions</div>
+    <p>Manpower Provider for Hospitals &amp; Shopping Malls</p>
+</header>
+
+<div class="container login-container">
+    <section class="card">
+        <h2>New client sign up</h2>
+        <form id="signupForm">
+            <label for="orgName">Organization Name</label>
+            <input type="text" id="orgName" placeholder="e.g. City Care Hospital" required autofocus>
+
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="3 to 20 letters or numbers" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="At least 6 characters" required>
+
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" required>
+
+            <button type="submit" class="full-width">Create account</button>
+        </form>
+        <div id="signupMsg"></div>
+
+        <p class="hint">Already have an account? <a href="login.html">Log in</a></p>
+    </section>
+</div>
+
+<script src="auth.js"></script>
+<script src="signup.js"></script>
+</body>
+</html>
