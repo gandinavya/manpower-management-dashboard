@@ -82,6 +82,28 @@ app.post('/api/login', (req, res) => {
     res.json({ token, role: user.role, name: user.name });
 });
 
+app.post('/api/signup', (req, res) => {
+    const name = (req.body.name || '').trim();
+    const username = (req.body.username || '').trim();
+    const password = req.body.password || '';
+
+    if (!name || name.length > 60) {
+        return res.status(400).json({ error: 'Enter your organization name.' });
+    }
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+        return res.status(400).json({ error: 'Username must be 3 to 20 letters, numbers or underscores.' });
+    }
+    if (password.length < 6) {
+        return res.status(400).json({ error: 'Password must be at least 6 characters.' });
+    }
+    if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        return res.status(409).json({ error: 'That username is already taken.' });
+    }
+
+    users.push({ username, password, role: 'client', name });
+    res.status(201).json({ message: 'Account created. You can log in now.' });
+});
+
 app.get('/api/contracts', auth, (req, res) => {
     const list = req.user.role === 'admin'
         ? contracts
