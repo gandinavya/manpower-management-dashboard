@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Manpower Management Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <div class="logo">Mayfair Security &amp; Cleaning Solutions</div>
+    <p>Manpower Provider for Hospitals &amp; Shopping Malls</p>
+</header>
+
+<div class="container login-container">
+    <section class="card">
+        <h2>Log in</h2>
+        <form id="loginForm">
+            <label for="username">Username</label>
+            <input type="text" id="username" required autofocus>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+
+            <button type="submit" class="full-width">Log in</button>
+        </form>
+        <div id="loginMsg"></div>
+
+        <p class="hint">
+            Demo accounts:<br>
+            Admin: <strong>admin</strong> / admin123<br>
+            Client: <strong>apollo</strong> / apollo123 or <strong>surya</strong> / surya123
+        </p>
+    </section>
+</div>
+
+<script src="auth.js"></script>
+<script src="login.js"></script>
+</body>
+</html>
